@@ -59,11 +59,11 @@ resource "aws_route_table" "terraform_public_rt" {
 resource "aws_route_table" "terraform_private_rt" {
   vpc_id = "${aws_vpc.terraform_vpc.id}"
   route {
-    cidr_block = "10.0.0.0/16"
+    cidr_block = "0.0.0.0/0"
     nat_gateway_id = "${aws_nat_gateway.terraform_natgw.id}"
   }
   tags = {
-    Name = "terraform_public_rt"
+    Name = "terraform_private_rt"
   }
 }
 
@@ -107,7 +107,7 @@ resource "aws_subnet" "terraform-subnet-public-2" {
 resource "aws_subnet" "terraform-subnet-private-1" {
   vpc_id     = "${aws_vpc.terraform_vpc.id}"
   cidr_block = "10.0.3.0/26"
-  map_public_ip_on_launch = "fales"
+  map_public_ip_on_launch = "false"
   availability_zone = "eu-west-1a"
   tags = {
     Name = "subnet-private-1"
@@ -118,7 +118,7 @@ resource "aws_subnet" "terraform-subnet-private-1" {
 resource "aws_subnet" "terraform-subnet-private-2" {
   vpc_id     = "${aws_vpc.terraform_vpc.id}"
   cidr_block = "10.0.4.0/26"
-  map_public_ip_on_launch = "fales"
+  map_public_ip_on_launch = "false"
   availability_zone = "eu-west-1b"
   tags = {
     Name = "subnet-private-4"
