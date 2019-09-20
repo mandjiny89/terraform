@@ -53,7 +53,22 @@ resource "aws_route_table" "terraform_public_rt" {
   }
 }
 
-#-----------Route-Table-Association----#
+#-----------Route------------#
+#-----------Private-Route-----#
+
+resource "aws_route_table" "terraform_private_rt" {
+  vpc_id = "${aws_vpc.terraform_vpc.id}"
+  route {
+    cidr_block = "10.0.0.0/16"
+    nat_gateway_id = "${aws_nat_gateway.terraform_natgw.id}"
+  }
+  tags = {
+    Name = "terraform_public_rt"
+  }
+}
+
+
+#-----------Public-Route-Table-Association----#
 
 resource "aws_route_table_association" "terraform_public_rt_1" {
   subnet_id      = "${aws_subnet.terraform-subnet-public-1.id}"
@@ -69,7 +84,8 @@ resource "aws_route_table_association" "terraform_public_rt_2" {
 resource "aws_subnet" "terraform-subnet-public-1" {
   vpc_id     = "${aws_vpc.terraform_vpc.id}"
   cidr_block = "10.0.1.0/26"
-
+  map_public_ip_on_launch = "true"
+  availability_zone = "eu-west-1a"
   tags = {
     Name = "subnet-public-1"
   }
@@ -79,7 +95,8 @@ resource "aws_subnet" "terraform-subnet-public-1" {
 resource "aws_subnet" "terraform-subnet-public-2" {
   vpc_id     = "${aws_vpc.terraform_vpc.id}"
   cidr_block = "10.0.2.0/26"
-
+  map_public_ip_on_launch = "true"
+  availability_zone = "eu-west-1b"
   tags = {
     Name = "subnet-public-2"
   }
@@ -90,7 +107,8 @@ resource "aws_subnet" "terraform-subnet-public-2" {
 resource "aws_subnet" "terraform-subnet-private-1" {
   vpc_id     = "${aws_vpc.terraform_vpc.id}"
   cidr_block = "10.0.3.0/26"
-
+  map_public_ip_on_launch = "fales"
+  availability_zone = "eu-west-1a"
   tags = {
     Name = "subnet-private-1"
   }
@@ -100,7 +118,8 @@ resource "aws_subnet" "terraform-subnet-private-1" {
 resource "aws_subnet" "terraform-subnet-private-2" {
   vpc_id     = "${aws_vpc.terraform_vpc.id}"
   cidr_block = "10.0.4.0/26"
-
+  map_public_ip_on_launch = "fales"
+  availability_zone = "eu-west-1b"
   tags = {
     Name = "subnet-private-4"
   }
