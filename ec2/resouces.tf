@@ -94,7 +94,7 @@ resource "aws_instance" "SI_SERVER" {
   ami           = "${var.region_ami["${var.AWS_REGION}"]}"
   instance_type = "t2.micro"
   availability_zone = "eu-west-1b"
-  disable_api_termination = "true"
+  disable_api_termination = "false"
   key_name = "${aws_key_pair.SI_KEYPAIR.key_name}"
 #  security_groups = "${aws_security_group.SI_SG.name}"
   subnet_id = "${aws_subnet.SI_SUBNET_PUBLIC_1b.id}"
@@ -102,13 +102,4 @@ resource "aws_instance" "SI_SERVER" {
   tags = {
     Name = "SI_SERVER"
   }
-
-  provisioner "file" {
-    source = "script.sh"
-    destination = "/opt/script.sh"
-    connection {
-      user = "${var.instance_username}"
-      private_key = "${var.path_to_private_key}"
-  }
-}
 }
