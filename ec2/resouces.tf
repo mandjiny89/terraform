@@ -102,4 +102,13 @@ resource "aws_instance" "SI_SERVER" {
   tags = {
     Name = "SI_SERVER"
   }
+
+  provisioner "file" {
+    source = "script.sh"
+    destination = "/opt/script.sh"
+    connection {
+      user = "${var.instance_username}"
+      private_key = "${var.path_to_private_key}"
+  }
+}
 }

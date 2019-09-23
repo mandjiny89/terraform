@@ -16,3 +16,8 @@ default = {
     eu-west-3      = "ami-0652eb0db9b20aeaf"
   }
 }
+
+variable "instance_username" {
+  default = "ec2-user"
+}
+variable "path_to_private_key" {}
