@@ -55,30 +55,29 @@ resource "aws_subnet" "SI_SUBNET_PUBLIC_1b" {
 
 #---------------Security_Group-----------#
 
-#resource "aws_security_group" "SI_SG" {
-#  name        = "Linux_SSH"
-#  description = "Allow SSH inbound traffic"
-#  vpc_id      = "${aws_vpc.SI_VPC.id}"
+resource "aws_security_group" "SI_SG" {
+  name        = "Linux_SSH"
+  description = "Allowing all IP to port 22"
+  vpc_id      = "${aws_vpc.SI_VPC.id}"
 
-#  ingress {
-#    # SSH (change to whatever ports you need)
-#    from_port   = 22
-#    to_port     = 22
-#    protocol    = "-1"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
+  ingress {
+    # SSH (change to whatever ports you need)
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-#  egress {
-#    from_port       = 0
-#    to_port         = 0
-#    protocol        = "-1"
-#    cidr_blocks     = ["0.0.0.0/0"]
-#  }
-
-# tags = {
-#    Name = "allow_all"
-#  }
-#}
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "Linux_SSH"
+ }
+}
 
 #------------------------------------------------EC2_Provisioning-------------------------------#
 
@@ -96,9 +95,9 @@ resource "aws_instance" "SI_SERVER" {
   availability_zone = "eu-west-1b"
   disable_api_termination = "false"
   key_name = "${aws_key_pair.SI_KEYPAIR.key_name}"
-#  security_groups = "${aws_security_group.SI_SG.name}"
+  vpc_security_group_ids = [aws_security_group.SI_SG.id]
   subnet_id = "${aws_subnet.SI_SUBNET_PUBLIC_1b.id}"
-#  depends_on = ["aws_vpc.SI_VPC.id"]
+  #depends_on = ["aws_vpc.SI_VPC.id"]
   tags = {
     Name = "SI_SERVER"
   }
