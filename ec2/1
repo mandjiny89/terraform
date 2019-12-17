@@ -100,6 +100,30 @@ resource "aws_instance" "SI_SERVER" {
   private_ip = "192.168.0.10"
   #depends_on = ["aws_vpc.SI_VPC.id"]
   
+  provisioner "file" {
+    source = "script.sh"
+    destination = "/tmp/script.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/script.sh",
+      "/tmp/script.sh",
+    ]
+  } 
+  connection {
+    host        = "192.168.0.10"
+    type        = "ssh"
+    private_key = "${var.path_to_private_key}"
+    port        = 22
+    user        = "ec2-user"
+    agent       = false
+    timeout     = "1m"
+  depends_on = [
+    aws_iam_role_policy.example,
+  ]
+  }
   tags = {
-    name = "SI_Server"
+    Name = "SI_SERVER"
+  }
 }

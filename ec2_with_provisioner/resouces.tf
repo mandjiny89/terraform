@@ -97,8 +97,36 @@ resource "aws_instance" "SI_SERVER" {
   key_name = "${aws_key_pair.SI_KEYPAIR.key_name}"
   vpc_security_group_ids = [aws_security_group.SI_SG.id]
   subnet_id = "${aws_subnet.SI_SUBNET_PUBLIC_1b.id}"
+  private_ip = "192.168.0.10"
   #depends_on = ["aws_vpc.SI_VPC.id"]
-  tags = {
-    Name = "SI_SERVER"
+
+  provisioner "file" {
+    source = "script.sh"
+    destination = "/tmp/script.sh"
+  
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      private_key = "${file("~/.ssh/id_rsa")}"
+      port        = 22
+      user        = "ec2-user"
+      agent       = false
+      timeout     = "3m"
+   }
+}
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/script.sh",
+      "/tmp/script.sh",
+    ]
+    connection {
+      host        = "${self.public_ip}"
+      type        = "ssh"
+      private_key = "${file("~/.ssh/id_rsa")}"
+      port        = 22
+      user        = "ec2-user"
+      agent       = false
+      timeout     = "3m"
+    }
   }
 }
