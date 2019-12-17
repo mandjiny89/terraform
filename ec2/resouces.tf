@@ -97,8 +97,9 @@ resource "aws_instance" "SI_SERVER" {
   key_name = "${aws_key_pair.SI_KEYPAIR.key_name}"
   vpc_security_group_ids = [aws_security_group.SI_SG.id]
   subnet_id = "${aws_subnet.SI_SUBNET_PUBLIC_1b.id}"
+  private_ip = "192.168.0.10"
   #depends_on = ["aws_vpc.SI_VPC.id"]
+  
   tags = {
-    Name = "SI_SERVER"
-  }
+    name = "SI_Server"
 }
