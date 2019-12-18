@@ -99,7 +99,17 @@ resource "aws_instance" "SI_SERVER" {
   subnet_id = "${aws_subnet.SI_SUBNET_PUBLIC_1b.id}"
   private_ip = "192.168.0.10"
   #depends_on = ["aws_vpc.SI_VPC.id"]
-  
   tags = {
     name = "SI_Server"
+  }
+
+      root_block_device {
+        volume_size = 40
+        volume_type = "standard"
+        delete_on_termination = "true"
+      }
+  
+      volume_tags = {
+        name = "projectname"
+      }
 }
